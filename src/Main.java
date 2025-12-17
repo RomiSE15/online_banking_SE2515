@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.Scanner; "для проверки гит"
 
 public class Main {
 
