@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS customers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+    );
+CREATE TABLE IF NOT EXISTS bank_accounts (
+    id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
+    account_number VARCHAR(50) NOT NULL UNIQUE,
+    balance DOUBLE PRECISION DEFAULT 0.0
+    );
