@@ -1,4 +1,5 @@
-// Наследник (Inheritance)
+package bank;
+
 public class SavingsAccount extends BankAccount {
     private double interestRate;
 
@@ -7,12 +8,12 @@ public class SavingsAccount extends BankAccount {
         this.interestRate = interestRate;
     }
 
-    @Override
     public boolean withdraw(double amount) {
-        if (balance - amount >= 0) {
-            balance -= amount;
+        if (this.balance - amount >= (double)0.0F) {
+            this.balance -= amount;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }

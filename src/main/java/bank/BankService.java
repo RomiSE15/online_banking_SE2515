@@ -1,23 +1,29 @@
+package bank;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 public class BankService {
-    public void printAll() {
+    public List<UserResponse> getAllUsers() {
+        List<UserResponse> users = new ArrayList<>();
         String query = "SELECT u.name, a.account_number, a.balance " +
                 "FROM users u JOIN accounts a ON u.id = a.user_id";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-            System.out.println("\n--- Database List ---");
             while (rs.next()) {
-                System.out.println("User: " + rs.getString("name") +
-                        " | Acc: " + rs.getString("account_number") +
-                        " | Bal: " + rs.getDouble("balance"));
+                users.add(new UserResponse(
+                        rs.getString("name"),
+                        rs.getString("account_number"),
+                        rs.getDouble("balance")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return users;
     }
+    public static record UserResponse(String name, String accountNumber, double balance) {}
     public void addUser(String name, String accNum, double initialBalance) {
         String insertUser = "INSERT INTO users (name) VALUES (?) RETURNING id";
         String insertAcc = "INSERT INTO accounts (user_id, account_number, balance) VALUES (?, ?, ?)";
@@ -38,7 +44,7 @@ public class BankService {
                     psAcc.executeUpdate();
                 }
                 conn.commit();
-                System.out.println("User added to DB successfully.");
+                System.out.println("bank.User added to DB successfully.");
             }
         } catch (SQLException e) {
             System.out.println("Error adding user: " + e.getMessage());
@@ -53,7 +59,7 @@ public class BankService {
             ps.setString(2, name);
             int rows = ps.executeUpdate();
             if (rows > 0) System.out.println("Balance updated.");
-            else System.out.println("User not found or error.");
+            else System.out.println("bank.User not found or error.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,8 +70,8 @@ public class BankService {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, name);
             int rows = ps.executeUpdate();
-            if (rows > 0) System.out.println("User " + name + " deleted.");
-            else System.out.println("User not found.");
+            if (rows > 0) System.out.println("bank.User " + name + " deleted.");
+            else System.out.println("bank.User not found.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
